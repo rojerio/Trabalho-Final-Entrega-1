@@ -1,0 +1,25 @@
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import '../repositories/transacao_local_repository.dart';
+import '../repositories/transacao_repository.dart';
+
+class SyncService {
+  final TransacaoRepository _transacaoRepository;
+  final TransacaoLocalRepository _transacaoLocalRepository;
+  StreamSubscription<List<ConnectivityResult>>? _subscription;
+
+  SyncService(this._transacaoRepository, this._transacaoLocalRepository);
+
+  void iniciarMonitoramento() {
+    _subscription = Connectivity().onConnectivityChanged
+      .listen((results) {
+        print('Conexão alterada');
+        final isConnected = results.any(
+          (connection) => connection != ConnectivityResult.none
+        );
+        if (isConnected) {
+          print("Conectado");
+        }
+      });
+  }
+}
